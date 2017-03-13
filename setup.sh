@@ -16,11 +16,21 @@ function install_base_packages()
   return 0
 }
 
+function instll_tesla_driver()
+{
+  drv_url=http://jp.download.nvidia.com/XFree86/Linux-x86_64/375.39/NVIDIA-Linux-x86_64-375.39.run
+  wget $drv_url -O nvidia-driver.run
+  sudo ./nvidia-driver.run
+
+  return 0
+}
+
 function install_cuda()
 {
+  # checks https://developer.nvidia.com/cuda-downloads
   cuda_url=https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda-repo-ubuntu1604-8-0-local-ga2_8.0.61-1_amd64-deb
 
-  wget $cuda_url -o cuda.deb
+  wget $cuda_url -O cuda.deb
   sudo dpkg -i cuda.deb
   $APT_UPDATE
   $APT_INSTALL install cuda
@@ -31,10 +41,12 @@ function install_cuda()
 function install_cudnn()
 {
   # get cudnn archive from https://developer.nvidia.com/cudnn
+  cudnn_archive=cudnn-8.0-linux-x64-v5.1.tgz
 
-  tar xzf cudnn-8.0-linux-x64-v5.1.tgz
+  tar xzf $cudnn_archive
   sudo cp -rf cuda/lib64/libcudnn* /usr/local/cuda/lib64/
   sudo cp -rf cuda/include/cudnn.h /usr/local/cuda/include/
+
   return 0
 }
 
@@ -86,6 +98,5 @@ install_cudnn
 install_chainer
 install_tensorflow
 install_caffe
-
 
 exit 0
