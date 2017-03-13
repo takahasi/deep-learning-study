@@ -58,18 +58,18 @@ function install_caffe()
   $APT_INSTALL libatlas-base-dev
   $APT_INSTALL --no-install-recommends libboost-all-dev
   $APT_INSTALL libgflags-dev libgoogle-glog-dev liblmdb-dev
-  $APT_INSTALL python-pip
-  $APT_INSTALL python-dev python-pip python-numpy python-skimage gfortran
+  $APT_INSTALL cmake python-dev python-numpy python-skimage gfortran
   git clone https://github.com/BVLC/caffe.git
   sed -e "s/# USE_CUDNN/USE_CUDNN/" caffe/Makefile.config.example > caffe/Makefile.config
   ( \
+    mkdir -p caffe/build \
     cd caffe/build \
     cmake .. \
     make -j all \
     $PIP_INSTALL -r ../python/requirements.txt \
     make pycaffe \
   )
-  echo 'export PYTHONPATH=`pwd`/..//python/:$PYTHONPATH' >> ~/.bashrc
+  echo 'export PYTHONPATH='`pwd`'/../python/:$PYTHONPATH' >> ~/.bashrc
 
   return 0
 }
@@ -87,10 +87,18 @@ function install_chainer()
 {
   $APT_UPDATE
   CUDA_PATH=/usr/local/cuda $PIP_INSTALL chainer
+  $PIP_INSTALL chainer-cuda-deps
 
   return 0
 }
 
+function run_chainer_example_mnist()
+{
+  git clone https://github.com/pfnet/chainer
+  (cd chainer/examples/mnist && python train_mnist.py)
+
+  return 0
+}
 
 install_base_packages
 install_cuda
@@ -98,5 +106,7 @@ install_cudnn
 install_chainer
 install_tensorflow
 install_caffe
+
+run_chainer_example_mnist
 
 exit 0
