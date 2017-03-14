@@ -95,7 +95,7 @@ function install_caffe()
   $INSTALL_APT libprotobuf-dev libleveldb-dev libsnappy-dev \
     libhdf5-serial-dev protobuf-compiler libatlas-base-dev \
     libgflags-dev libgoogle-glog-dev liblmdb-dev python-dev \
-    python-skimage gfortran
+    python-skimage gfortra libboost-python-dev
   $INSTALL_APT --no-install-recommends libboost-all-dev
 
   rm -rf caffe
