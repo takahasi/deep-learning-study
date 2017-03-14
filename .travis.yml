@@ -23,4 +23,4 @@ addons:
 before_script:
 
 script:
-  - ./setup.sh
+    - ./setup.sh --no-gpu
