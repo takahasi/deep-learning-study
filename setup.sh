@@ -9,6 +9,7 @@ set -ue
 readonly UPDATE_APT="sudo apt-get update"
 readonly INSTALL_APT="sudo apt-get install -y"
 readonly INSTALL_PIP="sudo pip install"
+readonly GIT_CLONE="git clone --depth 1"
 
 # GLOBAL VARIABLES
 # ================
@@ -97,7 +98,8 @@ function install_caffe()
     python-skimage gfortran
   $INSTALL_APT --no-install-recommends libboost-all-dev
 
-  git clone https://github.com/BVLC/caffe.git
+  rm -rf caffe
+  $GIT_CLONE https://github.com/BVLC/caffe
 
   if [[ $USE_GPU -eq 1 ]]; then
     sed -e "s/# USE_CUDNN/USE_CUDNN/" caffe/Makefile.config.example > caffe/Makefile.config
@@ -106,12 +108,9 @@ function install_caffe()
   fi
 
   ( \
-    mkdir -p caffe/build \
-    cd caffe/build \
-    cmake .. \
-    make -j all \
-    $INSTALL_PIP -r ../python/requirements.txt \
-    make pycaffe \
+    mkdir -p caffe/build && cd caffe/build && \
+    cmake .. && make -j all && \
+    $INSTALL_PIP -r ../python/requirements.txt && make pycaffe \
   )
   echo 'export PYTHONPATH='`pwd`'/../python/:$PYTHONPATH' >> ~/.bashrc
 
@@ -145,7 +144,8 @@ function install_chainer()
 
 function run_chainer_example_mnist()
 {
-  git clone https://github.com/pfnet/chainer
+  rm -rf chainer
+  $GIT_CLONE https://github.com/pfnet/chainer
   (cd chainer/examples/mnist && python train_mnist.py)
 
   return 0
