@@ -42,7 +42,7 @@ function install_base_packages()
   $UPDATE_APT
   $INSTALL_APT \
     ssh build-essential cmake git unzip pkg-config libopencv-dev \
-    python-pip libopencv-dev libgtk-3-dev python-numpy \
+    python-pip libopencv-dev libgtk-3-dev python-numpy python-pytest \
     python3-numpy libdc1394-22 libdc1394-22-dev libjpeg-dev \
     libpng12-dev libtiff5-dev libjasper-dev libavcodec-dev \
     libavformat-dev libswscale-dev libxine2-dev libgstreamer1.0-dev \
