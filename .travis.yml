@@ -1,0 +1,26 @@
+language: cpp
+sudo: required
+
+notifications:
+  email:
+    recipients:
+      - 3263ta@gmail.com
+    on_success: change # default: change
+    on_failure: always # default: change
+
+matrix:
+  include:
+    # Ubuntu14.04
+    - os: linux
+      dist: trusty
+    # Ubuntu12.04
+    - os: linux
+
+addons:
+  apt:
+    packages:
+
+before_script:
+
+script:
+  - ./setup.sh

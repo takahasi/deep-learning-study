@@ -96,8 +96,15 @@ function install_caffe()
     libgflags-dev libgoogle-glog-dev liblmdb-dev python-dev \
     python-skimage gfortran
   $INSTALL_APT --no-install-recommends libboost-all-dev
+
   git clone https://github.com/BVLC/caffe.git
-  sed -e "s/# USE_CUDNN/USE_CUDNN/" caffe/Makefile.config.example > caffe/Makefile.config
+
+  if [[ $USE_GPU -eq 1 ]]; then
+    sed -e "s/# USE_CUDNN/USE_CUDNN/" caffe/Makefile.config.example > caffe/Makefile.config
+  else
+    cp caffe/Makefile.config.example caffe/Makefile.config
+  fi
+
   ( \
     mkdir -p caffe/build \
     cd caffe/build \
@@ -113,18 +120,25 @@ function install_caffe()
 
 function install_tensorflow()
 {
-  $UPDATE_APT
-  $INSTALL_APT libcupti-dev
-  $INSTALL_PIP tensorflow-gpu
+  if [[ $USE_GPU -eq 1 ]]; then
+    $UPDATE_APT
+    $INSTALL_APT libcupti-dev
+    $INSTALL_PIP tensorflow-gpu
+  else
+    $INSTALL_PIP tensorflow
+  fi
 
   return 0
 }
 
 function install_chainer()
 {
-  $UPDATE_APT
-  CUDA_PATH=/usr/local/cuda $INSTALL_PIP chainer
-  $INSTALL_PIP chainer-cuda-deps
+  if [[ $USE_GPU -eq 1 ]]; then
+    CUDA_PATH=/usr/local/cuda $INSTALL_PIP chainer
+    $INSTALL_PIP chainer-cuda-deps
+  else
+    $INSTALL_PIP chainer
+  fi
 
   return 0
 }
@@ -157,17 +171,22 @@ do
       USE_TESLAP100=1
       ;;
     *)
-      #echo "[ERROR] invalid option $1 !!"
-      #usage
-      #exit 1
+      echo "[ERROR] invalid option $1 !!"
       ;;
   esac
   shift
 done
 
 install_base_packages
-install_cuda
-install_cudnn
+
+if [[ $USE_GPU -eq 1 ]]; then
+  install_cuda
+  install_cudnn
+  if [[ $USE_TESLAP100 -eq 1 ]]; then
+    install_tesla_driver
+  fi
+fi
+
 install_chainer
 install_tensorflow
 install_caffe
