@@ -39,7 +39,7 @@ EOF
 function install_base_packages()
 {
   $UPDATE_APT
-  $INSTALL_APT
+  $INSTALL_APT \
     ssh build-essential cmake git unzip pkg-config libopencv-dev \
     python-pip ffmpeg libopencv-dev libgtk-3-dev python-numpy \
     python3-numpy libdc1394-22 libdc1394-22-dev libjpeg-dev \
