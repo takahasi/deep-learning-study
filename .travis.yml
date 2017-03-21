@@ -13,8 +13,6 @@ matrix:
     # Ubuntu14.04
     - os: linux
       dist: trusty
-    # Ubuntu12.04
-    - os: linux
 
 addons:
   apt:
@@ -23,4 +21,5 @@ addons:
 before_script:
 
 script:
+    - ./setup.sh --help
     - ./setup.sh --no-gpu

@@ -8,7 +8,7 @@ set -ue
 # ================
 readonly UPDATE_APT="sudo apt-get update"
 readonly INSTALL_APT="sudo apt-get install -y"
-readonly INSTALL_PIP="sudo pip install"
+readonly INSTALL_PIP="sudo pip install --upgrade"
 readonly GIT_CLONE="git clone --depth 1"
 
 # GLOBAL VARIABLES
@@ -50,6 +50,7 @@ function install_base_packages()
     qtbase5-dev libfaac-dev libmp3lame-dev libopencore-amrnb-dev \
     libopencore-amrwb-dev libtheora-dev libvorbis-dev libxvidcore-dev \
     x264 v4l-utils
+    $INSTALL_PIP numpy
 
   return 0
 }
@@ -160,7 +161,7 @@ do
   case "$1" in
     '-h'|'--help' )
       usage
-      exit 1
+      exit 0
       ;;
     '--no-gpu' )
       echo "USE_GPU=0"
