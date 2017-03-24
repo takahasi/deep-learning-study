@@ -22,4 +22,5 @@ before_script:
 
 script:
     - ./setup.sh --help
-    - ./setup.sh --no-gpu
+    - ./setup.sh --no-gpu --chainer --tensorflow
+    - ./setup.sh --no-gpu --chainer-examples

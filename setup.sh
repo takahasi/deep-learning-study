@@ -15,6 +15,10 @@ readonly GIT_CLONE="git clone --depth 1"
 # ================
 USE_GPU=1
 USE_TESLAP100=0
+USE_CHAINER=0
+USE_TENSORFLOW=0
+USE_CAFFE=0
+USE_CHAINER_EXAMPLES=0
 
 # USAGE
 # =====
@@ -176,6 +180,32 @@ do
       echo "USE_TESLAP100=1"
       USE_TESLAP100=1
       ;;
+    '--chainer' )
+      echo "USE_CHAINER=0"
+      USE_CHAINER=1
+      ;;
+    '--tensorflow' )
+      echo "USE_TENSORFLOW=0"
+      USE_TENSORFLOW=1
+      ;;
+    '--caffe' )
+      echo "USE_CAFFE=0"
+      USE_CAFFE=1
+      ;;
+    '--chainer-examples' )
+      echo "USE_CHAINER_EXAMPLES=0"
+      USE_CHAINER_EXAMPLES=1
+      ;;
+    '--all' )
+      echo "USE_CHAINER=0"
+      USE_CHAINER=1
+      echo "USE_TENSORFLOW=0"
+      USE_TENSORFLOW=1
+      echo "USE_CAFFE=0"
+      USE_CAFFE=1
+      echo "USE_CHAINER_EXAMPLES=0"
+      USE_CHAINER_EXAMPLES=1
+      ;;
     *)
       echo "[ERROR] invalid option $1 !!"
       ;;
@@ -193,10 +223,19 @@ if [[ $USE_GPU -eq 1 ]]; then
   fi
 fi
 
-install_chainer
-install_tensorflow
-install_caffe
+if [[ $USE_CHAINER -eq 1 ]]; then
+  install_chainer
+fi
+if [[ $USE_TENSORFLOW -eq 1 ]]; then
+  install_tensorflow
+fi
 
-run_chainer_example_mnist
+if [[ $USE_CAFFE -eq 1 ]]; then
+  install_caffe
+fi
+
+if [[ $USE_CHAINER_EXAMPLES -eq 1 ]]; then
+  run_chainer_example_mnist
+fi
 
 exit 0
