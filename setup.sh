@@ -104,15 +104,20 @@ function install_caffe()
 
   if [[ $USE_GPU -eq 1 ]]; then
     sed -e "s/# USE_CUDNN/USE_CUDNN/" caffe/Makefile.config.example > caffe/Makefile.config
+    ( \
+      mkdir -p caffe/build && cd caffe/build && \
+      cmake .. && make -j all && \
+      $INSTALL_PIP -r ../python/requirements.txt && make pycaffe \
+    )
   else
     cp caffe/Makefile.config.example caffe/Makefile.config
+    ( \
+      mkdir -p caffe/build && cd caffe/build && \
+      cmake -DCPU_ONLY=ON .. && make -j all && \
+      $INSTALL_PIP -r ../python/requirements.txt && make pycaffe \
+    )
   fi
 
-  ( \
-    mkdir -p caffe/build && cd caffe/build && \
-    cmake .. && make -j all && \
-    $INSTALL_PIP -r ../python/requirements.txt && make pycaffe \
-  )
   echo 'export PYTHONPATH='`pwd`'/../python/:$PYTHONPATH' >> ~/.bashrc
 
   return 0
